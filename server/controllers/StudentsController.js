@@ -22,10 +22,37 @@ export default class StudentController {
     // }).catch(err => { next(err) })
   }
 
+  async getStudentByName(req, res, next) {
+    try {
+      if (!req.query.name) {
+        return next()
+      }
+      let student = await _studentsService.findOne({ name: req.query.name })
+      if (!student) {
+
+
+        return res.status(400).send("No student by that name")
+      }
+      res.send(student)
+    } catch (err) { next(err) }
+  }
+
+
+  async getStudentsBySport(req, res, next) {
+    try {
+      if (!req.query.sport) {
+        return next()
+      }
+      let students = await _studentsService.find({ sports: { $in: [req.query.sport] } })
+      res.send(students)
+    } catch (err) { next(err) }
+  }
 
 
   constructor() {
     this.router = express.Router()
+      .get('', this.getStudentByName)
+      .get('', this.getStudentsBySport)
       .get('', this.getAllStudents)
       .post('', this.createStudent)
   }

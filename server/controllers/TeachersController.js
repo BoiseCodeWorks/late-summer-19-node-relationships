@@ -28,6 +28,7 @@ export default class TeachersController {
   async addStudent(req, res, next) {
     try {
       let teacher = await _teachersService.findById(req.params.teacherId)
+      // @ts-ignore
       teacher.students.push(req.body.studentId)
       await teacher.save(err => {
         if (err) {
